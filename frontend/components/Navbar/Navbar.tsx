@@ -16,7 +16,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
     return (
 
-        <Flex backgroundColor={"brand.100"} height={"65px"} justifyContent={"flex-end"} p={3}>
+        <Flex backgroundColor={"brand.200"} height={"75px"} justifyContent={"flex-end"} p={3}>
             <Heading mr={"60%"} color={"white"}>FlowMentor</Heading>
             {props.user.addr ? props.user.addr : ""}
             <Link href="/Meets"><Button

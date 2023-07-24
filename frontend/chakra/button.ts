@@ -4,6 +4,7 @@ export const Button: ComponentStyleConfig = {
   baseStyle: {
     borderRadius: "60px",
     fontSize: "10pt",
+    marginLeft: "5px",
     fontWeight: 700,
     _focus: {
       boxShadow: "none",
@@ -22,9 +23,9 @@ export const Button: ComponentStyleConfig = {
   variants: {
     solid: {
       color: "white",
-      bg: "#6F1AB6",
+      bg: "#000",
       _hover: {
-        bg: "#6F1AB6",
+        bg: "#4A55A2",
       },
     },
 
