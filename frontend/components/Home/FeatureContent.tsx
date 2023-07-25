@@ -57,9 +57,10 @@ export default function SplitScreen() {
                 <Image
                     alt={'Login Image'}
                     objectFit={'cover'}
+                    rounded={'md'}
                     height={'80vh'}
                     src={
-                        'https://images.unsplash.com/photo-1513258496099-48168024aec0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'
+                        'https://images.unsplash.com/photo-1531496730074-83b638c0a7ac?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80'
                     }
                 />
             </Flex>

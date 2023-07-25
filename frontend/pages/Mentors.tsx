@@ -2,15 +2,19 @@
 import ItemDesc from '@/components/Profile/ItemDesc';
 import { Box, Grid } from '@chakra-ui/react';
 import React from 'react';
-
+import SearchBar from '@/components/Navbar/Searchbar';
+import BookData from '@/components/Navbar/Data.json'
 type MentorsProps = {
 
 };
+
+
 
 const Mentors: React.FC<MentorsProps> = () => {
 
     return (
         <Box>
+            <SearchBar placeholder="Search Your Mentor..." data={BookData}/>
             <Grid templateColumns={{
                 base: 'repeat(1, 1fr)',
                 md: 'repeat(2, 1fr)',
