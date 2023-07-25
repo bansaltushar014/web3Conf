@@ -7,8 +7,8 @@ export const theme = extendTheme({
   colors: {
     brand: {
       100: "#000",
-      200: "#6F1AB6",
-      300: "#8bb8b3",
+      200: "#4A55A2",
+      300: "#C5DFF8",
     },
   },
 
@@ -19,7 +19,7 @@ export const theme = extendTheme({
   styles: {
     global: () => ({
       body: {
-        bg: "#8bb8b3",
+        bg: "#C5DFF8",
       },
     }),
   },

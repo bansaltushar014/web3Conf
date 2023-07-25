@@ -11,6 +11,7 @@ type NavbarProps = {
 	handleLogOut: () => void;
 };
 
+
 const Navbar: React.FC<NavbarProps> = (props) => {
 	const reqestAccount = async () => {
 		console.log("Request Account .....");
