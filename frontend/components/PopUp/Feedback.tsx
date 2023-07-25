@@ -20,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { BsArrowUpRight, BsHeartFill, BsHeart } from "react-icons/bs";
+import { ethers } from "ethers";
 
 type FeedbackProps = {
 	//Wallet adddress of mentee
@@ -64,6 +65,215 @@ const Feedback: React.FC<FeedbackProps> = () => {
 	const giveFeedback = async (e: React.FormEvent) => {
 		e.preventDefault();
 	};
+
+	const reqestAccount = async () => {
+		console.log("Request Account .....");
+		if (window.ethereum) {
+			console.log("detected!");
+			try {
+				const accounts = await window.ethereum.request({
+					method: "eth_requestAccounts",
+				});
+				console.log(accounts);
+			} catch (error) {
+				console.log("Error connecting!");
+			}
+		} else {
+			alert("Meta Mask not detected!");
+		}
+	};
+
+    const submitReview = async () => {
+        const abi = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "cancelItByMentee",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "cancelItByMentor",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "confirmMeeting",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "rating",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "giveFeedback",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingSchedule",
+                        "type": "string"
+                    }
+                ],
+                "name": "reschedule",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "mentorName",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "price",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "service",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingSchedule",
+                        "type": "string"
+                    }
+                ],
+                "name": "setMeeting",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_id",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "getMeetingDetails",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "menteeName",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "mentorName",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "price",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "service",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "currentTimeStamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingSchedule",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingStatus",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "respectiveMentor",
+                        "type": "address"
+                    }
+                ],
+                "name": "getRating",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+        if(typeof window.ethereum !== 'undefined'){
+            await reqestAccount();
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            console.log(provider)
+            const signer = provider.getSigner()
+            const daiContract = new ethers.Contract('0xfF53CAC17fa075C982df0cEe09524dD1715f0505', abi, provider);   
+            const daiContractWithSigner = daiContract.connect(signer);
+            daiContractWithSigner.giveFeedback("1", 5);
+
+        }
+        onClose()
+    }
 
 	return (
 		<>
@@ -121,7 +331,7 @@ const Feedback: React.FC<FeedbackProps> = () => {
 											type="number"
 										/>
 										<Flex mt={5} justifyContent={"flex-end"}>
-											<Button type="submit" colorScheme="blue" mr={3}>
+											<Button type="submit" onClick={submitReview} colorScheme="blue" mr={3}>
 												Send Review
 											</Button>
 											<Button onClick={onClose} bg={"red.500"}>

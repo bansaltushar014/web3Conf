@@ -1,5 +1,6 @@
 import { Box, Button, Flex, FormLabel, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, useColorModeValue, ModalFooter, ModalOverlay, Text, Textarea, useDisclosure, Input, Center, Stack } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import { ethers } from "ethers";
 
 type ReScheduleCallProps = {
     //Wallet adddress of mentee
@@ -50,6 +51,215 @@ const ReScheduleCall: React.FC<ReScheduleCallProps> = (props) => {
         onClose();
 
 	};
+
+    const reqestAccount = async () => {
+		console.log("Request Account .....");
+		if (window.ethereum) {
+			console.log("detected!");
+			try {
+				const accounts = await window.ethereum.request({
+					method: "eth_requestAccounts",
+				});
+				console.log(accounts);
+			} catch (error) {
+				console.log("Error connecting!");
+			}
+		} else {
+			alert("Meta Mask not detected!");
+		}
+	};
+
+    const submitReview = async () => {
+        const abi = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "cancelItByMentee",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "cancelItByMentor",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "confirmMeeting",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "rating",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "giveFeedback",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingSchedule",
+                        "type": "string"
+                    }
+                ],
+                "name": "reschedule",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "mentorName",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "price",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "service",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingSchedule",
+                        "type": "string"
+                    }
+                ],
+                "name": "setMeeting",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_id",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "getMeetingDetails",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "menteeName",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "mentorName",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "price",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "service",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "currentTimeStamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingSchedule",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingStatus",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "respectiveMentor",
+                        "type": "address"
+                    }
+                ],
+                "name": "getRating",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+        if(typeof window.ethereum !== 'undefined'){
+            await reqestAccount();
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            console.log(provider)
+            const signer = provider.getSigner()
+            const daiContract = new ethers.Contract('0xfF53CAC17fa075C982df0cEe09524dD1715f0505', abi, provider);   
+            const daiContractWithSigner = daiContract.connect(signer);
+            daiContractWithSigner.reschedule("1", "45678987");
+
+        }
+        onClose()
+    }
 
         return (
         <>
@@ -107,7 +317,7 @@ const ReScheduleCall: React.FC<ReScheduleCallProps> = (props) => {
 
 
                                         <Flex mt={5} justifyContent={"flex-end"}>
-                                            <Button onClick={onsubmit} colorScheme='blue' mr={3}>
+                                            <Button onClick={submitReview} colorScheme='blue' mr={3}>
                                                 Schedule
                                             </Button>
                                             <Button onClick={onClose} bg={"red.500"}>Cancel</Button>

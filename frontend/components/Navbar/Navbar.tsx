@@ -64,7 +64,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             console.log(provider)
             const signer = provider.getSigner()
-            const daiContract = new ethers.Contract('0x5BE42058940b8cb71768342378388d945981dD3a', abi, provider);   
+            const daiContract = new ethers.Contract('0xfF53CAC17fa075C982df0cEe09524dD1715f0505', abi, provider);   
             const daiContractWithSigner = daiContract.connect(signer);
             daiContractWithSigner.store("5");
 
@@ -74,7 +74,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 	return (
 		<Flex backgroundColor={"brand.100"} height={"65px"} justifyContent={"flex-end"} p={3}>
 			<Heading mr={"60%"} color={"white"}>
-				FlowMentor
+				Web3Mentor
 			</Heading>
 			{props.user.addr ? props.user.addr : ""}
 			<Link href="/Meets">
@@ -87,7 +87,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 						transform: "translateY(-2px)",
 						boxShadow: "lg",
 					}}>
-					View My Meets
+					View My Meets 
 				</Button>
 			</Link>
 
@@ -97,7 +97,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 					Log Out
 				</Button>
 			) : (
-				<Button fontSize={"15"} rounded={"md"} onClick={connectWallet}>
+				<Button fontSize={"15"} rounded={"md"} onClick={props.login}>
 					Log In
 				</Button>
 			)}

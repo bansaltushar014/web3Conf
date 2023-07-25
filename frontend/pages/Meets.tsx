@@ -15,23 +15,11 @@ import {
     Center, Box
 } from '@chakra-ui/react'
 import ReScheduleCall from '@/components/PopUp/RescheduleCall';
-import * as fcl from "@onflow/fcl";
-import * as t from "@onflow/types";
+import { ethers } from "ethers";
 
 type MeetsProps = {
 
 };
-
-
-fcl.config({
-	//Emulator
-	"accessNode.api": "http://localhost:8888",
-	"app.detail.title": "Sharayu's Flow Wallet",
-
-	//wallet to interact with emulator
-	"discovery.wallet": "http://localhost:8701/fcl/authn",
-	"0xMentorMentee": "0xf8d6e0586b0a20c7",
-});
 
 
 const Meets: React.FC<MeetsProps> = () => {
@@ -46,24 +34,213 @@ const Meets: React.FC<MeetsProps> = () => {
         setdate("21st July, 2 PM");
     }
 
-    const acceptfun = async () => {
-        const txId = await fcl.send([
-			fcl.transaction`    
-      import MentorMentee from 0xMentorMentee
-      transaction(id: Int, name: String) {
+    const reqestAccount = async () => {
+		console.log("Request Account .....");
+		if (window.ethereum) {
+			console.log("detected!");
+			try {
+				const accounts = await window.ethereum.request({
+					method: "eth_requestAccounts",
+				});
+				console.log(accounts);
+			} catch (error) {
+				console.log("Error connecting!");
+			}
+		} else {
+			alert("Meta Mask not detected!");
+		}
+	};
 
-        prepare(acc: AuthAccount) {}
-      
-        execute {
-          MentorMentee.confirmMeeting(id: id, name: name)
+    const acceptfun = async () => {
+        const abi = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "cancelItByMentee",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "cancelItByMentor",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "confirmMeeting",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "rating",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "giveFeedback",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "meetingId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingSchedule",
+                        "type": "string"
+                    }
+                ],
+                "name": "reschedule",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "mentorName",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "price",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "service",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingSchedule",
+                        "type": "string"
+                    }
+                ],
+                "name": "setMeeting",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_id",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "getMeetingDetails",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "menteeName",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "mentorName",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "price",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "service",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "currentTimeStamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingSchedule",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "meetingStatus",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "respectiveMentor",
+                        "type": "address"
+                    }
+                ],
+                "name": "getRating",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+        if(typeof window.ethereum !== 'undefined'){
+            await reqestAccount();
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            console.log(provider)
+            const signer = provider.getSigner()
+            // const daiContract = new ethers.Contract('0xfF53CAC17fa075C982df0cEe09524dD1715f0505', abi, provider);   
+            // const daiContractWithSigner = daiContract.connect(signer);
+            // daiContractWithSigner.reschedule("1", "45678987");
+
         }
-      }
-      `,
-			fcl.args([fcl.arg(0, t.Int), fcl.arg("emily", t.String)]),
-			fcl.proposer(fcl.authz),
-			fcl.payer(fcl.authz),
-			fcl.authorizations([fcl.authz]),
-		]);
+        // onClose()
         setaccept("accepted")
     }
 
